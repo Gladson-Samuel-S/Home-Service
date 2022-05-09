@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HomeServiceWebApp.Models;
+using HomeServiceWebApp.ViewModel;
 
 namespace HomeServiceWebApp.Controllers
 {
@@ -22,7 +20,7 @@ namespace HomeServiceWebApp.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -135,9 +133,9 @@ namespace HomeServiceWebApp.Controllers
         }
 
         //
-        // GET: /Account/Register
+        // GET: /Account/UserRegister
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult UserRegister()
         {
             return View();
         }
@@ -147,30 +145,70 @@ namespace HomeServiceWebApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> UserRegister(UserRegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser 
+                { 
+                    FirstName = model.FirstName, 
+                    LastName = model.LastName, 
+                    DOB = model.DOB, 
+                    PhoneNumber = model.PhoneNumber, 
+                    UserName = model.Email, 
+                    Email = model.Email 
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await UserManager.AddToRoleAsync(user.Id, "User");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        public ActionResult VendorRegister()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/VendorRegister
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VendorRegister(VendorRegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser 
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Age = model.Age,
+                    Gender = (Models.Gender?)model.Gender,
+                    PhoneNumber = model.PhoneNumber,
+                    UserName = model.Email, 
+                    Email = model.Email 
+                };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(user.Id, "Vendor");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            return View(model);
+        }
+
 
         //
         // GET: /Account/ConfirmEmail
