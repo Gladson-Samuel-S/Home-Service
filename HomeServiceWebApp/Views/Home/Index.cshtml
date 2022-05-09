@@ -3,16 +3,39 @@
 }
 
 
-<div class="container" style="margin-top: 20px;">
+<div class="container mt-3">
+    <div class="jumbotron">
+        <h1 class="display-4">Home Services, on demand</h1>
+        <p class="lead">Sell your services now! Make money in your sleep by using our website</p>
+        <hr class="my-4">
+    </div>
+
+
+
     <div class="row">
-        <div class="col-lg-6">
-            @Html.ActionLink("Register User", "UserRegister", "Account")
+
+        <div class="card col mx-2">
+            <img class="card-img-top" src="~/Content/Images/Admin.svg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Admin Login</h5>
+                @Html.ActionLink("Login", "Login", "Account", null, htmlAttributes: new { @class = "btn btn-primary" })
+            </div>
         </div>
-        <div class="col-lg-6">
-            @Html.ActionLink("Register User", "UserRegister", "Account")
+
+        <div class="card col mx-2">
+            <img class="card-img-top" src="~/Content/Images/Login-User.svg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Register New User</h5>
+                @Html.ActionLink("Register user", "UserRegister", "Account", null, htmlAttributes: new { @class = "btn btn-primary" })
+            </div>
         </div>
-        <div class="col-lg-6">
-            @Html.ActionLink("Register User", "UserRegister", "Account")
+
+        <div class="card col mx-2">
+            <img class="card-img-top" src="~/Content/Images/Login-Vendor.svg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Register New Vendor</h5>
+                @Html.ActionLink("Register vendor", "VendorRegister", "Account", null, htmlAttributes: new { @class = "btn btn-primary" })
+            </div>
         </div>
     </div>
 </div>

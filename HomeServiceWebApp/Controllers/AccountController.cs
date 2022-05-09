@@ -171,6 +171,7 @@ namespace HomeServiceWebApp.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public ActionResult VendorRegister()
         {
             return View();

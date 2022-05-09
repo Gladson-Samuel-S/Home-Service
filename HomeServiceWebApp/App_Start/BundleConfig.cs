@@ -23,7 +23,7 @@ namespace HomeServiceWebApp
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap-paper.css",
+                      "~/Content/bootstrap-journal.css",
                       "~/Content/site.css"));
         }
     }
