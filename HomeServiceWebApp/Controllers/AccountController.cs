@@ -74,10 +74,21 @@ namespace HomeServiceWebApp.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            ApplicationUser user = null;
+
+            if(result == SignInStatus.Success)
+            {
+                user = await UserManager.FindByEmailAsync(model.Email);
+            }
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    if (await UserManager.IsInRoleAsync(userId: user.Id, role: "Vendor"))
+                        return RedirectToAction("Index", "Vendor");
+                    else
+                        return RedirectToAction("Index", "Home");
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -156,7 +167,7 @@ namespace HomeServiceWebApp.Controllers
                     DOB = model.DOB, 
                     PhoneNumber = model.PhoneNumber, 
                     UserName = model.Email, 
-                    Email = model.Email 
+                    Email = model.Email
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -202,7 +213,7 @@ namespace HomeServiceWebApp.Controllers
                 {
                     await UserManager.AddToRoleAsync(user.Id, "Vendor");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Vendor");
                 }
                 AddErrors(result);
             }
