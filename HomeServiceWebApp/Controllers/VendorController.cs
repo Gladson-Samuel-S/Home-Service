@@ -47,6 +47,25 @@ namespace HomeServiceWebApp.Controllers
         }
 
         [HttpGet]
+        public ActionResult ViewVendorDetails()
+        {
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var currentUserDetails = new ViewVendorDetailsViewModel
+            {
+                FirstName = currentUser.FirstName,
+                LastName = currentUser.LastName,
+                Age = currentUser.Age,
+                PhoneNumber = currentUser.PhoneNumber,
+                Email = currentUser.Email,
+                Address = currentUser.Vendor.Address,
+
+            };
+            ViewBag.VendorDetails = currentUserDetails;
+
+            return View(currentUserDetails);
+        }
+
+        [HttpGet]
         public ActionResult AddContactDetails()
         {
             return View();

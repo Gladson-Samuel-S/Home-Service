@@ -16,8 +16,16 @@
 
 
 <div class="row mt-4">
-    <div class="card col-md-4 mx-2" style="width: 18rem;">
-        <img class="card-img-top" src="~/Content/Images/Admin.svg" alt="Card image cap">
+    <div class="card col-md-3 mx-2" style="width: 18rem;">
+        <img class="card-img-top" src="~/Content/Images/View.svg" alt="Card image cap" height="200" width="200">
+        <div class="card-body">
+            <h5 class="card-title">Add Vendor's Contact Details</h5>
+            @Html.ActionLink("View Vendor Details", "ViewVendorDetails", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </div>
+    </div>
+
+    <div class="card col-md-3 mx-2" style="width: 18rem;">
+        <img class="card-img-top" src="~/Content/Images/Add.svg" alt="Card image cap" height="200" width="200">
         <div class="card-body">
             <h5 class="card-title">Add Vendor's Contact Details</h5>
             @if (ViewBag.ShowAddContactsLink == true)
@@ -31,8 +39,8 @@
         </div>
     </div>
 
-    <div class="card col-md-4 mx-2" style="width: 18rem;">
-        <img class="card-img-top" src="~/Content/Images/Admin.svg" alt="Card image cap">
+    <div class="card col-md-3 mx-2" style="width: 18rem;">
+        <img class="card-img-top" src="~/Content/Images/Edit.svg" alt="Card image cap" height="200" width="200">
         <div class="card-body">
             <h5 class="card-title">Edit Vendor's Contact Details</h5>
             @Html.ActionLink("Edit Contact Details", "EditVendorDetails", null, htmlAttributes: new { @class = "btn btn-primary" })

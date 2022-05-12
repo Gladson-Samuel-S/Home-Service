@@ -18,9 +18,21 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Vendor") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item active">
+                                @Html.ActionLink("Vendor", "Index", "Vendor", null, htmlAttributes: new { @class = "nav-link" })
+                            </li>
+                        }
+                    }
+
                     <li class="nav-item active">
-                        @Html.ActionLink("Vendor", "Index", "Vendor", null, htmlAttributes: new { @class = "nav-link" })
+                        @Html.ActionLink("Catalog", "Index", "Home", null, htmlAttributes: new { @class = "nav-link" })
                     </li>
+
                     <li class="nav-item">
                         @Html.Partial("_LoginPartial")
                     </li>
