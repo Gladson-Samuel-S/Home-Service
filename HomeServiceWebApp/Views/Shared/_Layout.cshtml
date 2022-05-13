@@ -16,23 +16,32 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse d-flex justify-content-between align-items-center" id="navbarNav">
                 <ul class="navbar-nav">
-
                     @if (Request.IsAuthenticated)
                     {
                         if (User.IsInRole("Vendor") || User.IsInRole("Admin"))
                         {
-                            <li class="nav-item active">
-                                @Html.ActionLink("Vendor", "Index", "Vendor", null, htmlAttributes: new { @class = "nav-link" })
+                            <li class="dropdown nav-item active">
+                                <a class="dropdown-toggle nav-link" href="#" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Vendor
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @Html.ActionLink("Home", "Index", "Vendor", null, htmlAttributes: new { @class = "nav-link text-primary" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("My Services", "MyServices", "Vendor", null, htmlAttributes: new { @class = "nav-link text-dark" })
+                                </div>
                             </li>
                         }
                     }
 
+
                     <li class="nav-item active">
                         @Html.ActionLink("Catalog", "Index", "Home", null, htmlAttributes: new { @class = "nav-link" })
                     </li>
+                </ul>
 
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         @Html.Partial("_LoginPartial")
                     </li>

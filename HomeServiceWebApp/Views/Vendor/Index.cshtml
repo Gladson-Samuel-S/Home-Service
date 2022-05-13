@@ -34,7 +34,7 @@
             }
             else
             {
-                <button class="btn btn-primary" disabled>Already Added</button>
+                <button class="btn btn-outline-secondary" disabled>Already Added</button>
             }
         </div>
     </div>
@@ -47,3 +47,20 @@
         </div>
     </div>
 </div>
+
+<hr class="mt-5"/>
+
+<div class="card text-center">
+    <div class="card-header">
+        Add a new service today.
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Join our company to change your life. Start by adding a new Service</h5>
+        <p class="card-text">Home-Service is an app-based marketplace that empowers professionals like you to become your own boss</p>
+        @Html.ActionLink("Add a new service", "AddNewService", null, htmlAttributes: new { @class = "btn btn-outline-primary" })
+    </div>
+    <div class="card-footer text-muted">
+        Trust us!
+    </div>
+</div>
+

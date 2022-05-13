@@ -2,6 +2,8 @@
 using HomeServiceWebApp.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -13,8 +15,9 @@ namespace HomeServiceWebApp.Controllers
     {
 
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _context;
 
-        public VendorController() { }
+        public VendorController() { _context = new ApplicationDbContext(); }
 
         public VendorController(ApplicationUserManager userManager)
         {
@@ -57,7 +60,7 @@ namespace HomeServiceWebApp.Controllers
                 Age = currentUser.Age,
                 PhoneNumber = currentUser.PhoneNumber,
                 Email = currentUser.Email,
-                Address = currentUser.Vendor.Address,
+                Address = currentUser.Vendor != null ? currentUser.Vendor.Address : "No Address Added",
 
             };
             ViewBag.VendorDetails = currentUserDetails;
@@ -97,7 +100,7 @@ namespace HomeServiceWebApp.Controllers
         public ActionResult EditVendorDetails()
         {
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
-            var currentUserDetails = new EditVendorDetailsViewModel() { Address = currentUser.Vendor.Address, PhoneNumber = currentUser.PhoneNumber };
+            var currentUserDetails = new EditVendorDetailsViewModel() { Address = currentUser.Vendor != null ? currentUser.Vendor.Address : "No Address Added", PhoneNumber = currentUser.PhoneNumber };
             return View(currentUserDetails);
         }
 
@@ -111,6 +114,12 @@ namespace HomeServiceWebApp.Controllers
 
             if (currentUser != null)
             {
+                if (currentUser.Vendor == null)
+                {
+                    var vendorAddress = new VendorContact { Address = vendor.Address };
+                    currentUser.Vendor = vendorAddress;
+                }
+
                 currentUser.Vendor.Address = vendor.Address;
                 currentUser.PhoneNumber = vendor.PhoneNumber;
             }
@@ -124,5 +133,116 @@ namespace HomeServiceWebApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public ActionResult AddNewService()
+        {
+            var categories = _context.Category.ToList();
+            var viewModel = new AddServiceViewModel
+            {
+                Category = categories
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult AddNewService(AddServiceViewModel service)
+        {
+            var categories = _context.Category.ToList();
+            var viewModel = new AddServiceViewModel
+            {
+                Category = categories
+            };
+
+            if (!ModelState.IsValid) 
+                return View(viewModel);
+
+            var newService = new Service
+            {
+                ServiceName = service.ServiceName,
+                CategoryId = service.CategoryId,
+                PhoneNumber = service.PhoneNumber,
+                Address = service.Address,
+                AvailableTime = service.AvailableTime,
+                Price = service.Price,
+                MapUrl = service.MapUrl,
+                ApplicationUserId = User.Identity.GetUserId(),
+            };
+
+            _context.Services.Add(newService);
+            _context.SaveChanges();
+
+            return RedirectToAction("MyServices");
+        }
+
+        [HttpGet]
+        public ActionResult MyServices()
+        {
+            string userId = User.Identity.GetUserId();
+            var services = _context.Services.Where(s => s.ApplicationUserId == userId).ToList();
+            if (services.Count == 0)
+                ViewBag.Message = "No Services found";
+
+            return View(services);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var serviceInDb = _context.Services.FirstOrDefault(s => s.Id == id);
+
+            if (serviceInDb == null) return HttpNotFound();
+
+            _context.Services.Remove(serviceInDb);
+            _context.SaveChanges();
+            return RedirectToAction("MyServices");
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var categories = _context.Category.ToList();
+            var serviceInDb = _context.Services.FirstOrDefault(s => s.Id == id);
+
+            var viewModel = new AddServiceViewModel
+            {
+                ServiceName = serviceInDb.ServiceName,
+                CategoryId = serviceInDb.CategoryId,
+                PhoneNumber = serviceInDb.PhoneNumber,
+                Address = serviceInDb.Address,
+                AvailableTime = serviceInDb.AvailableTime,
+                Price = serviceInDb.Price,
+                MapUrl = serviceInDb.MapUrl,
+                Category = categories
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(AddServiceViewModel service)
+        {
+            var categories = _context.Category.ToList();
+            var viewModel = new AddServiceViewModel
+            {
+                Category = categories
+            };
+
+            if (!ModelState.IsValid)
+                return View(viewModel);
+
+            var serviceInDb = _context.Services.FirstOrDefault(s => s.Id == service.Id);
+
+            serviceInDb.ServiceName = service.ServiceName;
+            serviceInDb.CategoryId = service.CategoryId;
+            serviceInDb.PhoneNumber = service.PhoneNumber;
+            serviceInDb.Address = service.Address;
+            serviceInDb.AvailableTime = service.AvailableTime;
+            serviceInDb.Price = service.Price;
+            serviceInDb.MapUrl = service.MapUrl;
+            serviceInDb.ApplicationUserId = User.Identity.GetUserId();
+            _context.SaveChanges();
+
+            return RedirectToAction("MyServices");
+        }
+
     }
 }

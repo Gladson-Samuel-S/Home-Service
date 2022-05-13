@@ -195,14 +195,37 @@
     <Compile Include="Migrations\202205101523118_ChangeInVendorContactModel.designer.cs">
       <DependentUpon>202205101523118_ChangeInVendorContactModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205120956210_AddedCategory.cs" />
+    <Compile Include="Migrations\202205120956210_AddedCategory.designer.cs">
+      <DependentUpon>202205120956210_AddedCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205121023426_SeedCategory.cs" />
+    <Compile Include="Migrations\202205121023426_SeedCategory.designer.cs">
+      <DependentUpon>202205121023426_SeedCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205121847363_CreateServiceTable.cs" />
+    <Compile Include="Migrations\202205121847363_CreateServiceTable.designer.cs">
+      <DependentUpon>202205121847363_CreateServiceTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205130500094_ChangeInServiceTable.cs" />
+    <Compile Include="Migrations\202205130500094_ChangeInServiceTable.designer.cs">
+      <DependentUpon>202205130500094_ChangeInServiceTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205130545357_ChangeInServiceTable2.cs" />
+    <Compile Include="Migrations\202205130545357_ChangeInServiceTable2.designer.cs">
+      <DependentUpon>202205130545357_ChangeInServiceTable2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Service.cs" />
     <Compile Include="Models\VendorContact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="ViewModel\ServiceViewModel.cs" />
     <Compile Include="ViewModel\VendorContactViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +336,9 @@
     <Content Include="Views\Vendor\AddContactDetails.cshtml" />
     <Content Include="Views\Vendor\EditVendorDetails.cshtml" />
     <Content Include="Views\Vendor\ViewVendorDetails.cshtml" />
+    <Content Include="Views\Vendor\AddNewService.cshtml" />
+    <Content Include="Views\Vendor\MyServices.cshtml" />
+    <Content Include="Views\Vendor\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -335,6 +361,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202205101523118_ChangeInVendorContactModel.resx">
       <DependentUpon>202205101523118_ChangeInVendorContactModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205120956210_AddedCategory.resx">
+      <DependentUpon>202205120956210_AddedCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205121023426_SeedCategory.resx">
+      <DependentUpon>202205121023426_SeedCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205121847363_CreateServiceTable.resx">
+      <DependentUpon>202205121847363_CreateServiceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205130500094_ChangeInServiceTable.resx">
+      <DependentUpon>202205130500094_ChangeInServiceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205130545357_ChangeInServiceTable2.resx">
+      <DependentUpon>202205130545357_ChangeInServiceTable2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

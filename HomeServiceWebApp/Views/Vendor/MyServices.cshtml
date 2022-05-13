@@ -1,0 +1,110 @@
+﻿@model IEnumerable<HomeServiceWebApp.Models.Service>
+
+@{
+    ViewBag.Title = "My Services";
+}
+
+<h2 class="mt-4">My Services</h2>
+
+<p>@ViewBag.Message</p>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="card mx-2 my-2 col-sm-auto" style="width: 18rem;">
+            <div class="card-body">
+                <h3 class="card-title">@item.ServiceName</h3>
+                <h6 class="card-subtitle mt-2 mb-3 text-muted">@item.ApplicationUser.FirstName  (@item.Category.Name)</h6>
+                <hr />
+                <p class="card-text">Address - @item.Address</p>
+                <p class="card-text text-success">Contact - @item.PhoneNumber</p>
+
+
+                <h3 class="text-capitalize text-black-50 card-text">₹ @item.Price</h3>
+                <hr />
+                <a href=@item.MapUrl target="_blank" class="card-link btn btn-primary">Maps Link</a>
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="card-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" />
+                    </svg>
+                </a>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="card-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ServiceName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AvailableTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MapUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AvailableTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MapUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>*@

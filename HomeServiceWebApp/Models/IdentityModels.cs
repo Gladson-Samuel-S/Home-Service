@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -43,6 +44,8 @@ namespace HomeServiceWebApp.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Service> Services { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
