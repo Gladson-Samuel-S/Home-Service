@@ -2,7 +2,6 @@
 using HomeServiceWebApp.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -166,6 +165,7 @@ namespace HomeServiceWebApp.Controllers
                 Address = service.Address,
                 AvailableTime = service.AvailableTime,
                 Price = service.Price,
+                Location = service.Location,
                 MapUrl = service.MapUrl,
                 ApplicationUserId = User.Identity.GetUserId(),
             };
@@ -211,6 +211,7 @@ namespace HomeServiceWebApp.Controllers
                 Address = serviceInDb.Address,
                 AvailableTime = serviceInDb.AvailableTime,
                 Price = serviceInDb.Price,
+                Location = serviceInDb.Location,
                 MapUrl = serviceInDb.MapUrl,
                 Category = categories
             };
@@ -237,6 +238,7 @@ namespace HomeServiceWebApp.Controllers
             serviceInDb.Address = service.Address;
             serviceInDb.AvailableTime = service.AvailableTime;
             serviceInDb.Price = service.Price;
+            serviceInDb.Location = service.Location;
             serviceInDb.MapUrl = service.MapUrl;
             serviceInDb.ApplicationUserId = User.Identity.GetUserId();
             _context.SaveChanges();
@@ -244,5 +246,24 @@ namespace HomeServiceWebApp.Controllers
             return RedirectToAction("MyServices");
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_context != null)
+                {
+                    _context.Dispose();
+                    _context = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

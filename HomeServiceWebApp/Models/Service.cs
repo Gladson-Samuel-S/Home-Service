@@ -14,15 +14,21 @@ namespace HomeServiceWebApp.Models
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
 
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         public string Address { get; set; }
 
+        [Display(Name = "Available Time")]
         public string AvailableTime { get; set; }
 
         public double Price { get; set; }
-        public string MapUrl { get; set; }
 
+        public string Location { get; set; }
+
+        [Display(Name = "Google Maps Link")]
+        public string MapUrl { get; set; }
+        
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }

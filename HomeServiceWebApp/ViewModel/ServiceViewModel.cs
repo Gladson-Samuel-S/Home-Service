@@ -29,7 +29,7 @@ namespace HomeServiceWebApp.ViewModel
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
 
-        public IEnumerable<SelectListItem> Grade
+        public IEnumerable<SelectListItem> Time
         {
             get
             {
@@ -50,6 +50,24 @@ namespace HomeServiceWebApp.ViewModel
         [Required(ErrorMessage = "Please enter a price for the service")]
         [Range(100, 100000, ErrorMessage = "Please enter a price within this range")]
         public double Price { get; set; }
+
+        public IEnumerable<SelectListItem> City
+        {
+            get
+            {
+                return new List<SelectListItem>()
+                     {
+                        new SelectListItem { Text = "Chennai", Value = "Chennai" },
+                        new SelectListItem { Text = "Coimbatore", Value = "Coimbatore" },
+                        new SelectListItem { Text = "Delhi", Value = "Delhi" },
+                        new SelectListItem { Text = "Mumbai", Value = "Mumbai" },
+                     };
+            }
+            set { }
+        }
+
+        [Required(ErrorMessage = "Please select a city")]
+        public string Location { get; set; }
 
         [Display(Name = "Map Link")]
         [Required]

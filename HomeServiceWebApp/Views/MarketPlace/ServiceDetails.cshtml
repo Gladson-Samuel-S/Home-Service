@@ -1,0 +1,91 @@
+﻿@model HomeServiceWebApp.Models.Service
+
+@{
+    ViewBag.Title = "ServiceDetails";
+}
+
+<div class="my-4  d-flex justify-content-start align-items-center">
+    <h2 class="mr-4">@Model.ServiceName</h2>
+    <button class="btn btn-primary">Book Now!</button>
+</div>
+
+<hr />
+
+@if (Model.Category.Name == "Appliance Repair")
+{
+    <img class="img-thumbnail rounded" height="800" width="800"  src="~/Content/Images/Services/Appliances.jpg" alt=@Model.Category.Name />
+
+}
+else if (Model.Category.Name == "Salon & Massage")
+{
+    <img class="img-thumbnail rounded" height="800" width="800"  src="~/Content/Images/Services/Hair.jpg" alt=@Model.Category.Name />
+}
+else
+{
+    <img class="img-thumbnail rounded" height="800" width="800"  src="~/Content/Images/Services/Cleaning.jpg" alt=@Model.Category.Name />
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           Category
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            Phone Number
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            Available Time
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AvailableTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            Google Maps Link
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MapUrl)
+        </dd>
+
+        <dt>
+            Vendor Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUser.FirstName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to Market place", "Index")
+</p>
