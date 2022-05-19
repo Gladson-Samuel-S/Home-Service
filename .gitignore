@@ -453,3 +453,6 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 API/appsettings.json
+/OrderModel.cs
+/RazorPayOptionsModel.cs
+/RegistrationModel.cs
