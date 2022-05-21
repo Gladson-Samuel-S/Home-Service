@@ -16,7 +16,7 @@
 
 
 <div class="row mt-4">
-    <div class="card col-md-3 mx-2" style="width: 18rem;">
+    <div class="card col-sm-auto mx-2" style="width: 18rem;">
         <img class="card-img-top" src="~/Content/Images/View.svg" alt="Card image cap" height="200" width="200">
         <div class="card-body">
             <h5 class="card-title">Add Vendor's Contact Details</h5>
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="card col-md-3 mx-2" style="width: 18rem;">
+    <div class="card col-sm-auto mx-2" style="width: 18rem;">
         <img class="card-img-top" src="~/Content/Images/Add.svg" alt="Card image cap" height="200" width="200">
         <div class="card-body">
             <h5 class="card-title">Add Vendor's Contact Details</h5>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="card col-md-3 mx-2" style="width: 18rem;">
+    <div class="card col-sm-auto mx-2" style="width: 18rem;">
         <img class="card-img-top" src="~/Content/Images/Edit.svg" alt="Card image cap" height="200" width="200">
         <div class="card-body">
             <h5 class="card-title">Edit Vendor's Contact Details</h5>
@@ -57,7 +57,8 @@
     <div class="card-body">
         <h5 class="card-title">Join our company to change your life. Start by adding a new Service</h5>
         <p class="card-text">Home-Service is an app-based marketplace that empowers professionals like you to become your own boss</p>
-        @Html.ActionLink("Add a new service", "AddNewService", null, htmlAttributes: new { @class = "btn btn-outline-primary" })
+        @Html.ActionLink("Add a new service", "AddNewService", null, htmlAttributes: new { @class = "btn btn-primary" })
+        @Html.ActionLink("My Services", "MyServices", null, htmlAttributes: new { @class = "btn btn-outline-secondary" })
     </div>
     <div class="card-footer text-muted">
         Trust us!

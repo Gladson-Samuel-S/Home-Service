@@ -6,10 +6,17 @@
 
 <h2 class="mt-4">My Services</h2>
 
-<p>@ViewBag.Message</p>
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+        <p>@ViewBag.Message</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
 
 <hr />
-
 
 <main class="row mx-auto">
     @foreach (var item in Model)
@@ -56,4 +63,7 @@
         </div>
     }
 </main>
+
+@Html.ActionLink("Home", "Index", null, htmlAttributes: new { @class = "btn btn-secondary mt-4" })
+
 

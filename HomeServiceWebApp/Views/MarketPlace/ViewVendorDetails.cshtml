@@ -1,0 +1,61 @@
+﻿@model HomeServiceWebApp.ViewModel.ViewVendorDetailsViewModel
+
+@{
+    ViewBag.Title = "Vendor Details";
+}
+
+<h2 class="mt-4">Vendor's Details</h2>
+
+<table class="table table-bordered mt-4">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                @ViewBag.VendorDetails.FirstName
+            </td>
+            <td>
+                @ViewBag.VendorDetails.LastName
+            </td>
+            <td>
+                @ViewBag.VendorDetails.Age
+            </td>
+            <td>
+                @ViewBag.VendorDetails.PhoneNumber
+            </td>
+            <td>
+                @ViewBag.VendorDetails.Email
+            </td>
+            <td>
+                <textarea rows="5">@ViewBag.VendorDetails.Address</textarea>
+            </td>
+        </tr>
+    </tbody>
+
+</table>
+
+
+<div>
+    @Html.ActionLink("Back to Home", "Index")
+</div>

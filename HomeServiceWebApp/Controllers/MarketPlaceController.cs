@@ -1,8 +1,11 @@
 ﻿using HomeServiceWebApp.Models;
 using HomeServiceWebApp.ViewModel;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace HomeServiceWebApp.Controllers
@@ -11,6 +14,8 @@ namespace HomeServiceWebApp.Controllers
     public class MarketPlaceController : Controller
     {
         private ApplicationDbContext _context;
+        private ApplicationUserManager _userManager;
+
         public IEnumerable<SelectListItem> City
         {
             get
@@ -26,7 +31,27 @@ namespace HomeServiceWebApp.Controllers
             set { }
         }
 
-        public MarketPlaceController() { _context = new ApplicationDbContext(); }
+        public MarketPlaceController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        public MarketPlaceController(ApplicationUserManager userManager) 
+        { 
+            UserManager = userManager;
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         // GET: MarketPlace
         public ActionResult Index(int? CategoryId, string Location)
@@ -85,6 +110,44 @@ namespace HomeServiceWebApp.Controllers
         {
             var service = _context.Services.FirstOrDefault(s => s.Id == id);
             return View(service);
+        }
+        
+        public ActionResult ViewVendorDetails(string vendorId)
+        {
+            var vendorInDb = UserManager.FindById(vendorId);
+            var vendorInDbDetails = new ViewVendorDetailsViewModel
+            {
+                FirstName = vendorInDb.FirstName,
+                LastName = vendorInDb.LastName,
+                Age = vendorInDb.Age,
+                PhoneNumber = vendorInDb.PhoneNumber,
+                Email = vendorInDb.Email,
+                Address = vendorInDb.Vendor != null ? vendorInDb.Vendor.Address : "No Address Added",
+
+            };
+            ViewBag.VendorDetails = vendorInDbDetails;
+
+            return View(vendorInDbDetails);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_context != null)
+                {
+                    _context.Dispose();
+                    _context = null;
+                }
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

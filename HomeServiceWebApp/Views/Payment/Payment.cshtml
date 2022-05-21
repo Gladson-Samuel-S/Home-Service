@@ -1,0 +1,66 @@
+﻿@model HomeServiceWebApp.Models.RazorPayOptions
+
+@{
+    ViewBag.Title = "Payment";
+}
+
+<button id="rzp-button1" hidden>Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options =
+    {
+        "key": "@Model.Key", // Enter the Key ID generated from the Dashboard
+        "amount": "@Model.AmountInSubUnits", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "@Model.Currency",
+        "name": "@Model.UserName",
+        "description": "@Model.Description",
+        "image": "https://example.com/your_logo", // You can give your logo url
+        "order_id": "@Model.OrderId",
+        "handler": function (response) {
+
+            // After payment successfully made response will come here
+            // Set the data in hidden form
+            document.getElementById('rzp_paymentid').value = response.razorpay_payment_id;
+            document.getElementById('rzp_orderid').value = response.razorpay_order_id;
+
+            // // Let's submit the form automatically
+            document.getElementById('rzp-paymentresponse').click();
+        },
+
+        "prefill":
+        {
+            "name": "@Model.UserName",
+            "email": "@Model.UserEmail",
+            "contact": "@Model.UserContact"
+        },
+        "notes":
+        {
+            "address": "@Model.UserAddress"
+        },
+        "theme":
+        {
+        "color": "#F37254"
+        }
+    };
+
+var rzp1 = new Razorpay(options);
+
+window.onload = function(){
+    document.getElementById('rzp-button1').click();
+};
+
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+<!-- This form is hidden, and submit when payment successfully made -->
+@using (Html.BeginForm("Complete", "Payment", new {id = Model.ServiceId}))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("rzp_paymentid")
+    @Html.Hidden("rzp_orderid")
+    <button type="submit" id="rzp-paymentresponse" class="btn btn-primary" hidden>Submit</button>
+}

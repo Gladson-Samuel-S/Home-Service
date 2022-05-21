@@ -171,7 +171,12 @@ namespace HomeServiceWebApp.Controllers
             };
 
             _context.Services.Add(newService);
-            _context.SaveChanges();
+            int result = _context.SaveChanges();
+
+            if (result > 0)
+                TempData["Message"] = "Successfully Added a new service";
+            else
+                TempData["Message"] = "Failed to add a new service 😔";
 
             return RedirectToAction("MyServices");
         }
@@ -184,6 +189,7 @@ namespace HomeServiceWebApp.Controllers
             if (services.Count == 0)
                 ViewBag.Message = "No Services found";
 
+            ViewBag.Message = TempData["Message"];
             return View(services);
         }
 
@@ -215,6 +221,7 @@ namespace HomeServiceWebApp.Controllers
                 MapUrl = serviceInDb.MapUrl,
                 Category = categories
             };
+
             return View(viewModel);
         }
 
@@ -241,7 +248,12 @@ namespace HomeServiceWebApp.Controllers
             serviceInDb.Location = service.Location;
             serviceInDb.MapUrl = service.MapUrl;
             serviceInDb.ApplicationUserId = User.Identity.GetUserId();
-            _context.SaveChanges();
+            int result = _context.SaveChanges();
+
+            if (result > 0)
+                TempData["Message"] = "Edited Successfully";
+            else
+                TempData["Message"] = "Failed to Edit 😔";
 
             return RedirectToAction("MyServices");
         }

@@ -29,7 +29,6 @@ namespace HomeServiceWebApp.Models
         public Gender? Gender { get; set; }
 
         public int? VendorId { get; set; }
-
         [ForeignKey("VendorId")]
         public virtual VendorContact Vendor { get; set; }
 
@@ -46,6 +45,8 @@ namespace HomeServiceWebApp.Models
     {
         public DbSet<Category> Category { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<Orders> Orders { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
