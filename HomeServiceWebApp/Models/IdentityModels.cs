@@ -32,6 +32,10 @@ namespace HomeServiceWebApp.Models
         [ForeignKey("VendorId")]
         public virtual VendorContact Vendor { get; set; }
 
+        public double Discount { get; set; } = 1;
+
+        public bool IsDiscount { get; set; } = false;
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -46,6 +50,7 @@ namespace HomeServiceWebApp.Models
         public DbSet<Category> Category { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Orders> Orders { get; set; }
+        public DbSet<UserReview> UserReviews { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

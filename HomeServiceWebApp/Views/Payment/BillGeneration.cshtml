@@ -1,0 +1,66 @@
+﻿@model HomeServiceWebApp.Models.Orders
+
+@{
+    ViewBag.Title = "BillGeneration";
+}
+
+<h2 class="my-4">Bill for @Model.Service.ServiceName</h2>
+
+<a class="btn btn-primary mb-4" href="javascript:window.print()">Print Bill</a>
+@Html.ActionLink("Go to My Bookings", "MyBookingsUser", "Bookings", null, new {@class = "btn btn-outline-secondary ml-2 mb-4"})
+
+<div class="table-responsive-sm">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-nowrap">
+                    Service Name
+                </th>
+
+                <th scope="col" class="text-nowrap">
+                    Customer
+                </th>
+
+                <th scope="col" class="text-nowrap">
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+
+                <th scope="col" class="text-nowrap">
+                    @Html.DisplayNameFor(model => model.OrderId)
+                </th>
+
+                <th scope="col" class="text-nowrap">
+                    @Html.DisplayNameFor(model => model.TransactionId)
+                </th>
+
+                <th scope="col" class="text-nowrap">
+                    @Html.DisplayNameFor(model => model.Service.Price)
+                </th>
+
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr>
+                <td scope="row" class="text-nowrap">
+                    @Html.DisplayFor(model => model.Service.ServiceName)
+                </td>
+                <td scope="row" class="text-nowrap">
+                    @Model.ApplicationUser.FirstName  @Model.ApplicationUser.LastName
+                </td>
+                <td scope="row" class="text-nowrap">
+                    @Model.CreationDate.ToString("D")
+                </td>
+                <td scope="row" class="text-nowrap">
+                    @Html.DisplayFor(model => model.OrderId)
+                </td>
+                <td scope="row" class="text-nowrap">
+                    @Html.DisplayFor(model => model.TransactionId)
+                </td>
+                <td scope="row" class="text-nowrap">
+                    @Html.DisplayFor(model => model.Price)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

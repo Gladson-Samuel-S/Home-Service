@@ -196,6 +196,13 @@ namespace HomeServiceWebApp.Controllers
         public ActionResult Delete(int id)
         {
             var serviceInDb = _context.Services.FirstOrDefault(s => s.Id == id);
+            var orders = _context.Orders.Where(s => s.ServiceId == id).ToList();
+
+            if (orders.Count > 0 || orders.Any())
+            {
+                TempData["Message"] = "Cannot Delete there are bookings for this service";
+                return RedirectToAction("MyServices");
+            }
 
             if (serviceInDb == null) return HttpNotFound();
 
@@ -208,7 +215,17 @@ namespace HomeServiceWebApp.Controllers
         {
             var categories = _context.Category.ToList();
             var serviceInDb = _context.Services.FirstOrDefault(s => s.Id == id);
+            var orders = _context.Orders.Where(s => s.ServiceId == id).ToList();
+            bool canEdit = true;
 
+            if (orders.Count > 0 || orders.Any())
+            {
+                canEdit = false;
+                ViewBag.CanEdit = canEdit;
+                return View();
+            }
+
+            ViewBag.CanEdit = canEdit;
             var viewModel = new AddServiceViewModel
             {
                 ServiceName = serviceInDb.ServiceName,

@@ -19,10 +19,13 @@ namespace HomeServiceWebApp.Models
         [ForeignKey("ServiceId")]
         public virtual Service Service { get; set; }
 
+        public double Price { get; set; }
+
         public string OrderId { get; set; }
 
         public string TransactionId { get; set; }
 
+        [Display(Name = "Booked On")]
         public DateTime CreationDate { get; set; }
 
         public IEnumerable<SelectListItem> Status
@@ -38,6 +41,12 @@ namespace HomeServiceWebApp.Models
             set { }
         }
 
+        [Display(Name = "Status")]
         public string IsFinished { get; set; }
+
+        public int? UserReviewId { get; set; }
+
+        [ForeignKey("UserReviewId")]
+        public virtual UserReview Review { get; set; }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using HomeServiceWebApp.Models;
+using HomeServiceWebApp.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -12,6 +15,19 @@ namespace HomeServiceWebApp.Controllers
     {
         private ApplicationDbContext _context;
         private ApplicationUserManager _userManager;
+        public IEnumerable<SelectListItem> RatingList
+        {
+            get
+            {
+                return new List<SelectListItem>()
+                     {
+                        new SelectListItem { Text = "Excellent", Value = "Excellent" },
+                        new SelectListItem { Text = "Good", Value = "Good" },
+                        new SelectListItem { Text = "Poor", Value = "Poor" },
+                     };
+            }
+            set { }
+        }
 
         public BookingsController()
         {
@@ -35,22 +51,100 @@ namespace HomeServiceWebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "User, Vendor")]
         public ActionResult Index()
         {
-            return View();
+            if (User.IsInRole("Vendor"))
+            {
+                return RedirectToAction("MyBookingsVendor");
+            }
+            else
+            {
+                return RedirectToAction("MyBookingsUser");
+            }
         }
 
+        [Authorize(Roles = "User")]
         public ActionResult MyBookingsUser()
         {
-            var bookingsInDb = _context.Orders.Where(u => u.ApplicationUserId == User.Identity.GetUserId()).Include(s => s.Service).ToList();
+            var currentUserId = User.Identity.GetUserId();
 
-            if(bookingsInDb == null) 
+            var bookingsInDb = _context.Orders.Where(u => u.ApplicationUserId == currentUserId).OrderByDescending(d => d.CreationDate).Include(s => s.Service).ToList();
+
+            if(bookingsInDb == null || bookingsInDb.Count <= 0) 
             {
-                ViewBag.Error = "No Bookings Found";
+                ViewBag.Error = "No Bookings Found!";
                 return View();
             }
 
             return View(bookingsInDb);
+        }
+
+        [Authorize(Roles = "Vendor")]
+        public ActionResult MyBookingsVendor()
+        {
+            var currentUserId = User.Identity.GetUserId();
+            var bookingsInDb = _context.Orders.Where(u => u.Service.ApplicationUserId == currentUserId).OrderByDescending(d => d.CreationDate).Include(s => s.Service).ToList();
+
+            if (bookingsInDb == null || bookingsInDb.Count <= 0)
+            {
+                ViewBag.Error = "No Bookings for any services Found!";
+                return View();
+            }
+
+            return View(bookingsInDb);
+        }
+
+        [Authorize(Roles = "Vendor")]
+        [HttpPost]
+        public ActionResult UpdateStatus(int id, string Status)
+        {
+            var bookingsInDb = _context.Orders.SingleOrDefault(o => o.Id == id);
+
+            if (bookingsInDb != null && !string.IsNullOrEmpty(Status))
+            {
+                bookingsInDb.IsFinished = Status;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("MyBookingsVendor");
+        }
+
+        [Authorize(Roles = "User")]
+        public ActionResult UserReview(int id)
+        {
+            ViewBag.RatingList = RatingList;
+            return View();
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public ActionResult UserReview(int id, string Rating, string Review)
+        {
+            ViewBag.RatingList = RatingList;
+
+            if (string.IsNullOrEmpty(Rating) && string.IsNullOrEmpty(Review))
+            {
+                ViewBag.Error = "Please fill all the fields";
+                return View();
+            }
+            else
+            {
+                var order = _context.Orders.SingleOrDefault(o => o.Id == id);
+
+                var newUserReview = new UserReview
+                {
+                    Rating = Rating,
+                    Review = Review
+                };
+                var result = _context.UserReviews.Add(newUserReview);
+
+                order.UserReviewId = result.Id;
+
+                _context.SaveChanges();
+
+                return RedirectToAction("MyBookingsUser");
+            }
         }
 
         protected override void Dispose(bool disposing)

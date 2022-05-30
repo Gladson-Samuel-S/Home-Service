@@ -2,9 +2,11 @@
 using HomeServiceWebApp.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using PagedList;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -53,10 +55,45 @@ namespace HomeServiceWebApp.Controllers
             }
         }
 
+        public async Task CheckDiscount()
+        {
+            List<string> userIds = new List<string>();
+
+            var userOrders = _context.Orders.ToList();
+            var currentUserId = User.Identity.GetUserId();
+            var currentUser = UserManager.FindById(currentUserId);
+            var maxServiceOrderedByUser = userOrders.GroupBy(n => n.ApplicationUserId)
+                                 .Select(n => new
+                                 {
+                                     UserName = n.Select(u => u.ApplicationUser.FirstName),
+                                     UserId = n.Select(u => u.ApplicationUserId),
+                                     UserCount = n.Count()
+                                 })
+                                 .OrderByDescending(n => n.UserCount).Take(5).ToList();
+
+            foreach (var item in maxServiceOrderedByUser)
+            {
+                userIds.AddRange(item.UserId);
+            }
+
+            if (userIds.Contains(currentUserId))
+            {
+                currentUser.IsDiscount = true;
+                currentUser.Discount = 0.8;
+                await UserManager.UpdateAsync(currentUser);
+            }
+        }
+
         // GET: MarketPlace
-        public ActionResult Index(int? CategoryId, string Location)
+        public async Task<ActionResult> Index(int? page, int? CategoryId, string Location)
         {
             IEnumerable<Service> services = null;
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+
+            await CheckDiscount();
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            ViewBag.CurrentUser = currentUser;
 
             var categories = _context.Category.ToList();
             ViewBag.Categories = categories;
@@ -103,12 +140,20 @@ namespace HomeServiceWebApp.Controllers
                 ViewBag.NotFound = "No Services Found 😔"; 
             }
 
-            return View(services);
+            return View(services.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult ServiceDetails(int id)
         {
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            ViewBag.CurrentUser = currentUser;
             var service = _context.Services.FirstOrDefault(s => s.Id == id);
+            var userReviewsForService = _context.Orders.Where(o => o.ServiceId == id && o.UserReviewId != null).OrderByDescending(o => o.CreationDate).Include(r => r.Review).Take(5).ToList();
+
+            if (userReviewsForService.Any() && userReviewsForService.Count() > 0)   
+                ViewBag.UserReviews = userReviewsForService;
+            else 
+                ViewBag.UserReviews = null; 
             return View(service);
         }
         

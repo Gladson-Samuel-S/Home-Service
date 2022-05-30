@@ -11,7 +11,7 @@
     <div class="col-lg-6 col-sm-auto">
         @if (Model.Category.Name == "Appliance Repair")
         {
-            <img class="img-thumbnail rounded"  src="~/Content/Images/Services/Appliances.jpg" alt=@Model.Category.Name />
+            <img class="img-thumbnail rounded" src="~/Content/Images/Services/Appliances.jpg" alt=@Model.Category.Name />
 
         }
         else if (Model.Category.Name == "Salon & Massage")
@@ -27,7 +27,15 @@
     <div class="col-lg-6 col-sm-auto">
         <div class="jumbotron bg-light">
             <h1>@Model.ServiceName</h1>
-            <h3>₹ @Model.Price</h3>
+            @if (ViewBag.CurrentUser.IsDiscount == true)
+            {
+                <h3>₹ @(Model.Price * ViewBag.CurrentUser.Discount)</h3>
+            }
+            else
+            {
+                <h3>₹ @Model.Price</h3>
+            }
+
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <h3 class="text-capitalize text-black-50 card-text">
@@ -65,7 +73,7 @@
             </ul>
 
             <div class="d-flex justify-content-start align-items-center">
-                @Html.ActionLink("Book Now!", "Payment", "Payment", new {id = Model.Id} , new { @class = "btn btn-primary mt-4 ml-2" })
+                @Html.ActionLink("Book Now!", "Payment", "Payment", new { id = Model.Id }, new { @class = "btn btn-primary mt-4 ml-2" })
                 @Html.ActionLink("Back to Market place", "Index", null, new { @class = "btn btn-outline-secondary mt-4 ml-2" })
             </div>
 
@@ -73,4 +81,24 @@
     </div>
 
 </div>
+
+@if (ViewBag.UserReviews != null)
+{
+    <hr />
+    <h2 class="my-2">User Reviews</h2>
+    <div class="row mt-4">
+        @foreach (var item in ViewBag.UserReviews)
+        {
+        <div class="card mx-2 my-2 col-sm-auto px-0 py-0" style="width: 20rem;">
+            <div class="card-header">
+                @item.ApplicationUser.FirstName @item.ApplicationUser.LastName
+            </div>
+            <div class="card-body">
+                @item.Review.Review
+            </div>
+        </div>
+        }
+    </div>
+
+}
 

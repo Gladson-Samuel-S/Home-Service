@@ -46,13 +46,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=6.0.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.6.0.4\lib\net452\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.Interfaces.6.0.0\lib\net452\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.0.0.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.System.Drawing.6.0.0\lib\net452\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="Razorpay, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Razorpay.3.0.0\lib\net45\Razorpay.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -173,6 +194,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
+    <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MarketPlaceController.cs" />
@@ -229,6 +251,34 @@
     <Compile Include="Migrations\202205200938000_CreatingOrders.designer.cs">
       <DependentUpon>202205200938000_CreatingOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205230507252_CreatingUserReviewTable.cs" />
+    <Compile Include="Migrations\202205230507252_CreatingUserReviewTable.designer.cs">
+      <DependentUpon>202205230507252_CreatingUserReviewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205230537322_ChangeUserReviewTable.cs" />
+    <Compile Include="Migrations\202205230537322_ChangeUserReviewTable.designer.cs">
+      <DependentUpon>202205230537322_ChangeUserReviewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205230711577_UpdateUserReviews.cs" />
+    <Compile Include="Migrations\202205230711577_UpdateUserReviews.designer.cs">
+      <DependentUpon>202205230711577_UpdateUserReviews.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205251104315_AddedDiscount.cs" />
+    <Compile Include="Migrations\202205251104315_AddedDiscount.designer.cs">
+      <DependentUpon>202205251104315_AddedDiscount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205260651544_UpdatedDiscount.cs" />
+    <Compile Include="Migrations\202205260651544_UpdatedDiscount.designer.cs">
+      <DependentUpon>202205260651544_UpdatedDiscount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205260654142_DeleteDiscountFromServiceTable.cs" />
+    <Compile Include="Migrations\202205260654142_DeleteDiscountFromServiceTable.designer.cs">
+      <DependentUpon>202205260654142_DeleteDiscountFromServiceTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202205270411069_changeInOrderTable.cs" />
+    <Compile Include="Migrations\202205270411069_changeInOrderTable.designer.cs">
+      <DependentUpon>202205270411069_changeInOrderTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -237,12 +287,15 @@
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\RazorPayOptions.cs" />
     <Compile Include="Models\Service.cs" />
+    <Compile Include="Models\UserReview.cs" />
     <Compile Include="Models\VendorContact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
     <Compile Include="ViewModel\ServiceViewModel.cs" />
+    <Compile Include="ViewModel\UserReviewViewModel.cs" />
+    <Compile Include="ViewModel\ValidServiceViewModel.cs" />
     <Compile Include="ViewModel\VendorContactViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -256,12 +309,15 @@
     <Content Include="Content\Images\Add.svg" />
     <Content Include="Content\Images\Admin.svg" />
     <Content Include="Content\Images\Edit.svg" />
+    <Content Include="Content\Images\Feedback.svg" />
     <Content Include="Content\Images\Login-User.svg" />
     <Content Include="Content\Images\Login-Vendor.svg" />
+    <Content Include="Content\Images\Report.svg" />
     <Content Include="Content\Images\Services\Appliances.jpg" />
     <Content Include="Content\Images\Services\Cleaning.jpg" />
     <Content Include="Content\Images\Services\Hair.jpg" />
     <Content Include="Content\Images\View.svg" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -363,10 +419,15 @@
     <Content Include="Views\Payment\Payment.cshtml" />
     <Content Include="Views\Payment\Success.cshtml" />
     <Content Include="Views\Payment\Failure.cshtml" />
+    <Content Include="Views\Bookings\MyBookingsUser.cshtml" />
+    <Content Include="Views\Bookings\MyBookingsVendor.cshtml" />
+    <Content Include="Views\Bookings\UserReview.cshtml" />
+    <Content Include="Views\Home\Admin.cshtml" />
+    <Content Include="Views\Payment\BillGeneration.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Bookings\" />
+    <Folder Include="Views\Excel\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -407,6 +468,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202205200938000_CreatingOrders.resx">
       <DependentUpon>202205200938000_CreatingOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205230507252_CreatingUserReviewTable.resx">
+      <DependentUpon>202205230507252_CreatingUserReviewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205230537322_ChangeUserReviewTable.resx">
+      <DependentUpon>202205230537322_ChangeUserReviewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205230711577_UpdateUserReviews.resx">
+      <DependentUpon>202205230711577_UpdateUserReviews.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205251104315_AddedDiscount.resx">
+      <DependentUpon>202205251104315_AddedDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205260651544_UpdatedDiscount.resx">
+      <DependentUpon>202205260651544_UpdatedDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205260654142_DeleteDiscountFromServiceTable.resx">
+      <DependentUpon>202205260654142_DeleteDiscountFromServiceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205270411069_changeInOrderTable.resx">
+      <DependentUpon>202205270411069_changeInOrderTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

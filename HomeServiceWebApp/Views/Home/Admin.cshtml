@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Admin";
+}
+
+<div class="row my-4">
+
+    <div class="card col-sm-auto mx-2" style="width: 20rem;">
+        <img class="card-img-top" src="~/Content/Images/Feedback.svg" height="300" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">User Feedback Generation</h5>
+            @Html.ActionLink("Save User FeedBack", "ExportFeedbackReportToExcel", "Excel", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </div>
+    </div>
+
+    <div class="card col-sm-auto mx-2" style="width: 20rem;">
+        <img class="card-img-top" src="~/Content/Images/Report.svg" height="300" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Service Report</h5>
+            @Html.ActionLink("Save Service Report", "ExportOrderDetailsToExcel", "Excel", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+

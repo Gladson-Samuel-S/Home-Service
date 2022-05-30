@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "UserReview";
+}
+
+<h2 class="mt-4">Please leave us a review!</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@ViewBag.Error</h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <hr />
+}
+
+@using (Html.BeginForm("UserReview", "Bookings", FormMethod.Post))
+{
+    <div class="form-horizontal my-4">
+        <div class="form-group mx-2">
+            @Html.DropDownList("Rating", new SelectList(ViewBag.RatingList, "Value", "Text"), "Select a rating", new { @class = "form-control", required = "required" })
+        </div>
+        <div class="form-group mx-2">
+            @Html.TextArea("Review", "", rows: 8, columns: 20, htmlAttributes: new { @class = "form-control", required = "required", min = "5", max = "100"})
+        </div>
+        <div class="form-group mx-2">
+            <input type="submit" value="Add" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Bookings", "MyBookingsVendor")
+</div>

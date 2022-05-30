@@ -86,8 +86,10 @@ namespace HomeServiceWebApp.Controllers
                 case SignInStatus.Success:
                     if (await UserManager.IsInRoleAsync(userId: user.Id, role: "Vendor"))
                         return RedirectToAction("Index", "Vendor");
-                    else
+                    else if (await UserManager.IsInRoleAsync(userId: user.Id, role: "User"))
                         return RedirectToAction("Index", "MarketPlace");
+                    else
+                        return RedirectToAction("Admin", "Home");
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");

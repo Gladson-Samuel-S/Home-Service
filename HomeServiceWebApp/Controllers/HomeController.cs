@@ -6,11 +6,20 @@ namespace HomeServiceWebApp.Controllers
     {
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                return RedirectToAction("Admin", "Home");
+
+            else if (User.Identity.IsAuthenticated && User.IsInRole("User"))
                 return RedirectToAction("Index", "MarketPlace");
+
             else if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Vendor");
+            
+            return View();
+        }
 
+        public ActionResult Admin()
+        {
             return View();
         }
     }

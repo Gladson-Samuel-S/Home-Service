@@ -1,8 +1,11 @@
-﻿@model IEnumerable<HomeServiceWebApp.Models.Service>
+﻿@model PagedList.IPagedList<HomeServiceWebApp.Models.Service>  
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "My Services";
 }
+
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 <p>@ViewBag.Message</p>
 
@@ -16,104 +19,118 @@
 
 @using (Html.BeginForm("Index", "MarketPlace", FormMethod.Get))
 {
-<div class="form-inline my-4">
-    <div class="form-group mx-2">
-        @Html.DropDownList("CategoryId", new SelectList(ViewBag.Categories, "Id", "Name"), "Select a category",  new { @class = "form-control" })
+    <div class="form-inline my-4">
+        <div class="form-group mx-2">
+            @Html.DropDownList("CategoryId", new SelectList(ViewBag.Categories, "Id", "Name"), "Select a category", new { @class = "form-control" })
+        </div>
+        <div class="form-group mx-2">
+            @Html.DropDownList("Location", new SelectList(ViewBag.City, "Value", "Text"), "Select a City", new { @class = "form-control" })
+        </div>
+        <div class="form-group mx-2">
+            <input type="submit" value="Filter" class="btn btn-outline-secondary" />
+        </div>
     </div>
-    <div class="form-group mx-2">
-        @Html.DropDownList("Location", new SelectList(ViewBag.City, "Value", "Text"), "Select a City", new { @class = "form-control" })
-    </div>
-    <div class="form-group mx-2">
-        <input type="submit" value="Filter" class="btn btn-outline-secondary" />
-    </div>
-</div>
 }
 
 
-    @if (ViewBag.SelectedCategory != null || ViewBag.SelectedLocation != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <h4>Found @Model.Count() Services!</h4>
-            <hr />
-            <strong>Filtered Based On - </strong>
-            @if (ViewBag.SelectedCategory != null && @ViewBag.SelectedLocation != null)
-            {
-                <p class="d-inline">@ViewBag.SelectedCategory & @ViewBag.SelectedLocation</p>
-            }
-            else
-            {
-                <p class="d-inline">@ViewBag.SelectedCategory  @ViewBag.SelectedLocation</p>
-
-            }
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
+@if (ViewBag.SelectedCategory != null || ViewBag.SelectedLocation != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h4>Found @Model.Count() Services!</h4>
         <hr />
-    }
+        <strong>Filtered Based On - </strong>
+        @if (ViewBag.SelectedCategory != null && @ViewBag.SelectedLocation != null)
+        {
+            <p class="d-inline">@ViewBag.SelectedCategory & @ViewBag.SelectedLocation</p>
+        }
+        else
+        {
+            <p class="d-inline">@ViewBag.SelectedCategory  @ViewBag.SelectedLocation</p>
+
+        }
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <hr />
+}
 
 
-    @if (ViewBag.NotFound != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <h4 class="alert-heading">@ViewBag.NotFound</h4>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+@if (ViewBag.NotFound != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@ViewBag.NotFound</h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
-        <hr />
-    }
-    else
-    {
-        <main class="row mx-auto">
-            @foreach (var item in Model)
-            {
-                <div class="card mx-2 my-2 col-sm-auto px-0 py-0" style="width: 20rem;">
-                    <div class="card-header">
-                        <h4 class="card-title">@item.ServiceName</h4>
-                        <h6 class="card-subtitle mt-2 mb-3 text-muted">@item.ApplicationUser.FirstName  (@item.Category.Name)</h6>
-                    </div>
-
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <h3 class="text-capitalize text-black-50 card-text">₹ @item.Price</h3>
-                            </li>
-                            <li class="list-group-item text-muted">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
-                                </svg>
-                                <p class="ml-2 d-inline">@item.Location</p>
-                            </li>
-                            <li class="list-group-item text-muted">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                                </svg>
-                                <p class="ml-2 d-inline">@item.PhoneNumber</p>
-                            </li>
-                        </ul>
-
-                        <hr />
-
-                        <a href=@item.MapUrl target="_blank" class="card-link btn btn-primary">Maps</a>
-
-                        @if (User.IsInRole("User") || User.IsInRole("Admin"))
-                        {
-                            @Html.ActionLink("Book Now!", "ServiceDetails", "MarketPlace", new { id = item.Id }, new { @class = "card-link btn btn-outline-secondary" })
-                        }
-                    </div>
+    <hr />
+}
+else
+{
+    <main class="row mx-auto">
+        @foreach (var item in Model)
+        {
+            <div class="card mx-2 my-2 col-sm-auto px-0 py-0" style="width: 20rem;">
+                <div class="card-header">
+                    <h4 class="card-title">@item.ServiceName</h4>
+                    <h6 class="card-subtitle mt-2 mb-3 text-muted">@item.ApplicationUser.FirstName  (@item.Category.Name)</h6>
                 </div>
-            }
-        </main>
-    }
 
-    @if (ViewBag.SelectedCategory != null || ViewBag.NotFound != null || ViewBag.SelectedLocation != null)
-    {
-        @Html.ActionLink("Back to Market place", "Index", null, new { @class = "btn btn-secondary mt-4" })
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            @if (ViewBag.CurrentUser.IsDiscount == true)
+                            {
+                            <div class="d-flex justify-content-start align-items-center">
+                                <h3 class="text-capitalize text-black-50 card-text mr-4">₹ @(item.Price * ViewBag.CurrentUser.Discount)</h3>
+                                <h6 class="text-secondary"><del>₹ @item.Price</del></h6>
+                                <h6 class="text-primary ml-2">20% OFF</h6>
+                            </div>
+                            }
+                            else
+                            {
+                                <h3 class="text-capitalize text-black-50 card-text">₹ @item.Price</h3>
+                            }
+                        </li>
+                        <li class="list-group-item text-muted">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                            </svg>
+                            <p class="ml-2 d-inline">@item.Location</p>
+                        </li>
+                        <li class="list-group-item text-muted">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                            </svg>
+                            <p class="ml-2 d-inline">@item.PhoneNumber</p>
+                        </li>
+                    </ul>
 
-    }
+                    <hr />
+
+                    <a href=@item.MapUrl target="_blank" class="card-link btn btn-primary">Maps</a>
+
+                    @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Book Now!", "ServiceDetails", "MarketPlace", new { id = item.Id }, new { @class = "card-link btn btn-outline-secondary" })
+                    }
+                </div>
+            </div>
+        }
+    </main>
+}
+
+@if (ViewBag.SelectedCategory != null || ViewBag.NotFound != null || ViewBag.SelectedLocation != null)
+{
+    @Html.ActionLink("Back to Market place", "Index", null, new { @class = "btn btn-secondary mt-4" })
+
+}
+
+
+@Html.PagedListPager(Model as PagedList.IPagedList, page => Url.Action("Index", new { page }))
 
 
 

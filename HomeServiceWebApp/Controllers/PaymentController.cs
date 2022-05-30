@@ -5,6 +5,7 @@ using Razorpay.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -43,13 +44,21 @@ namespace HomeServiceWebApp.Controllers
         {
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
             var currentServiceInDb = _context.Services.SingleOrDefault(s => s.Id == id);
+            decimal servicePrice = 0;
+
+            if (currentUser.IsDiscount == true)
+                servicePrice = (decimal)(currentServiceInDb.Price * currentUser.Discount);
+            else
+                servicePrice = (decimal)(currentServiceInDb.Price);
+
             Random random = new Random();
             string transactionId = random.Next(10000000, 100000000).ToString();
 
             RazorpayClient client = new RazorpayClient(_key, _secret);
+
             var options = new Dictionary<string, object>();
 
-            options.Add("amount", currentServiceInDb.Price * 100);
+            options.Add("amount", servicePrice * 100);
             options.Add("receipt", transactionId);
             options.Add("currency", "INR");
             options.Add("payment_capture", "0");
@@ -61,7 +70,7 @@ namespace HomeServiceWebApp.Controllers
             {
                 OrderId = orderId,
                 Key = _key,
-                AmountInSubUnits = (decimal)currentServiceInDb.Price * 100,
+                AmountInSubUnits = servicePrice * 100,
                 Currency = "INR",
                 UserName = currentUser.UserName,
                 UserEmail = currentUser.Email,
@@ -74,9 +83,12 @@ namespace HomeServiceWebApp.Controllers
             return View(razorPay);
         }
 
-        public ActionResult Success()
+        public ActionResult BillGeneration(int id)
         {
-            return View();
+            var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+            if (order == null) return HttpNotFound();
+            
+            return View(order);
         }
 
         public ActionResult Failure()
@@ -85,9 +97,10 @@ namespace HomeServiceWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Complete(int id)
+        public async Task<ActionResult> Complete(int id)
         {
             var currentServiceInDb = _context.Services.SingleOrDefault(s => s.Id == id);
+            var currentUserId = User.Identity.GetUserId();
 
             string paymentId = Request.Params["rzp_paymentid"];
             string orderId = Request.Params["rzp_orderid"];
@@ -99,24 +112,37 @@ namespace HomeServiceWebApp.Controllers
             Dictionary<string, object> options = new Dictionary<string, object>();
             options.Add("amount", payment.Attributes["amount"]);
             Razorpay.Api.Payment paymentCaptured = payment.Capture(options);
-            string amt = paymentCaptured.Attributes["amount"];
+            double amt = (double)paymentCaptured.Attributes["amount"];
             var creationDate = DateTime.Now;
+            var price = amt / 100;
 
             if (paymentCaptured.Attributes["status"] == "captured")
             {
+                var currentUserName = User.Identity.Name;
+                var VendorId = currentServiceInDb.ApplicationUserId;
+                var VendorName = $"{currentServiceInDb.ApplicationUser.FirstName} {currentServiceInDb.ApplicationUser.LastName}";
+
+                var emailBodyForUser = $"Dear Customer {currentUserName}, Thanks for paying ₹ {price} for {currentServiceInDb.ServiceName} by {VendorName} Your OrderId = {orderId}";
+                var emailBodyForVendor = $"Dear Vendor {VendorName}, New service booked for {currentServiceInDb.ServiceName} by {currentUserName}";
+
+                await UserManager.SendEmailAsync(currentUserId, $"Payment for {currentServiceInDb.ServiceName}", emailBodyForUser);
+                await UserManager.SendEmailAsync(VendorId, $"Payment for {currentServiceInDb.ServiceName}", emailBodyForVendor);
+
                 var customerOrder = new Orders
                 {
-                    ApplicationUserId = User.Identity.GetUserId(),
+                    ApplicationUserId = currentUserId,
                     ServiceId = id,
+                    Price = price,
                     OrderId = orderId,
                     TransactionId = paymentId,
                     CreationDate = creationDate,
                     IsFinished = "In Progress",
+                    UserReviewId = null,
                 };
 
-                _context.Orders.Add(customerOrder);
+                var result = _context.Orders.Add(customerOrder);
                 _context.SaveChanges();
-                return RedirectToAction("Success");
+                return RedirectToAction("BillGeneration", new {id = result.Id});
             }
             else
             {
